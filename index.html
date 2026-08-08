@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Doodle Museum</title>
+    <meta name="description" content="Draw, share, and explore doodles in the Virtual Doodle Museum. Create art and share it with the world.">
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -21,47 +24,76 @@
 
 <body>
 
-<div class="container">
+<!-- Hero Section with Shutter Blinds -->
+<section class="hero" id="hero">
+    <div class="hero-blinds" id="heroBlinds">
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+        <div class="blind"></div>
+    </div>
+    <div class="hero-content" id="heroContent">
+        <h1 class="hero-title">🎨 Virtual Doodle Museum</h1>
+        <p class="hero-subtitle">Unleash your inner artist. Draw, share & explore doodles from around the world.</p>
+        <button class="hero-cta" id="heroCta">✨ Start Drawing</button>
+    </div>
+</section>
 
-    <header>
-        <h1>🎨 Virtual Doodle Museum</h1>
-        <p>Draw something amazing and share it with everyone.</p>
+<div class="container" id="mainContent" style="display: none;">
+
+    <header role="banner" class="site-header">
+        <div class="brand">
+            <h1 class="site-title">Virtual Doodle Museum</h1>
+            <span class="site-sub">Draw something amazing and share it with everyone.</span>
+        </div>
     </header>
 
     <!-- Drawing Area -->
     <section class="drawing-panel">
 
-        <div class="input-group">
-            <input type="text" id="title" placeholder="Title of your doodle *">
-            <input type="text" id="artist" placeholder="Artist Name (Optional)">
-        </div>
+        <form class="input-group" id="drawingMeta" autocomplete="off">
+            <div class="field">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" placeholder="Title of your doodle *" required>
+            </div>
+            <div class="field">
+                <label for="artist">Artist</label>
+                <input type="text" id="artist" name="artist" placeholder="Artist Name (Optional)">
+            </div>
+        </form>
 
         <div class="canvas-wrapper">
-            <canvas id="canvas" width="800" height="500"></canvas>
+            <div class="canvas-container">
+                <canvas id="canvas" width="800" height="500" aria-label="Drawing canvas"></canvas>
+            </div>
         </div>
 
-        <!-- Main Toolbar -->
+        <!-- Floating Toolbar -->
         <div class="toolbar">
 
             <!-- Tools Section -->
-            <div class="tool-section">
-                <button id="pencilBtn" class="active-tool">✏️ Pencil</button>
-                <button id="lineBtn">📏 Line</button>
-                <button id="rectBtn">⬜ Rect</button>
-                <button id="circleBtn">⭕ Circle</button>
-                <button id="eraserBtn">🧽 Eraser</button>
+            <div class="tool-section" role="toolbar" aria-label="Drawing tools">
+                <button data-tool="pencil" id="pencilBtn" class="active-tool" aria-pressed="true">✏️ Pencil</button>
+                <button data-tool="line" id="lineBtn">📏 Line</button>
+                <button data-tool="rect" id="rectBtn">⬜ Rect</button>
+                <button data-tool="circle" id="circleBtn">⭕ Circle</button>
+                <button data-tool="eraser" id="eraserBtn">🧽 Eraser</button>
             </div>
 
             <!-- Custom Color & Brush Size -->
             <div class="tool-section">
                 <div>
-                    <label>🎨 Color</label>
-                    <input type="color" id="colorPicker" value="#000000">
+                    <label for="colorPicker">🎨 Color</label>
+                    <input type="color" id="colorPicker" value="#000000" aria-label="Brush color">
                 </div>
 
                 <div>
-                    <label>🖌️ Size</label>
-                    <input type="range" id="brushSize" min="1" max="40" value="5">
+                    <label for="brushSize">🖌️ Size</label>
+                    <input type="range" id="brushSize" min="1" max="40" value="5" aria-label="Brush size">
                 </div>
             </div>
 
@@ -73,6 +105,8 @@
                 <span class="swatch" data-color="#2ecc71" style="background:#2ecc71;"></span>
                 <span class="swatch" data-color="#f1c40f" style="background:#f1c40f;"></span>
                 <span class="swatch" data-color="#9b59b6" style="background:#9b59b6;"></span>
+                <span class="swatch" data-color="#FFB6C1" style="background:#FFB6C1;"></span>
+                <span class="swatch" data-color="#89CFF0" style="background:#89CFF0;"></span>
             </div>
 
             <!-- Actions -->
@@ -81,7 +115,7 @@
                 <button id="redoBtn">↪️ Redo</button>
                 <button id="clearBtn">🗑️ Clear</button>
                 <button id="downloadBtn">📥 Download</button>
-                <button id="uploadBtn">💾 Save Drawing</button>
+                <button id="uploadBtn" class="save-btn">💾 Save Drawing</button>
             </div>
 
         </div>
@@ -102,10 +136,71 @@
             </div>
         </div>
 
-        <div id="gallery" class="gallery"></div>
+        <div id="gallery" class="gallery" role="list"></div>
     </section>
 
 </div>
+
+<!-- Toasts container -->
+<div id="toasts" class="toasts" aria-live="polite" aria-atomic="true"></div>
+
+<!-- Confirm Modal -->
+<div id="confirmModal" class="modal" role="dialog" aria-modal="true" hidden>
+    <div class="modal-panel">
+        <p id="confirmMessage">Are you sure?</p>
+        <div class="modal-actions">
+            <button id="confirmCancel">Cancel</button>
+            <button id="confirmOk" class="danger">Yes, clear</button>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" hidden>
+    <div class="lightbox-panel">
+        <button id="lightboxClose" class="lightbox-close">✕</button>
+        <img id="lightboxImage" alt="Full doodle view">
+        <div class="lightbox-meta">
+            <h3 id="lightboxTitle"></h3>
+            <p id="lightboxArtist"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Hero shutter reveal script -->
+<script>
+(function() {
+    const hero = document.getElementById('hero');
+    const cta = document.getElementById('heroCta');
+    const blinds = document.getElementById('heroBlinds');
+    const heroContent = document.getElementById('heroContent');
+    const mainContent = document.getElementById('mainContent');
+
+    // Check if user has already opened the museum this session
+    if (sessionStorage.getItem('heroOpened')) {
+        hero.style.display = 'none';
+        mainContent.style.display = '';
+    }
+
+    cta.addEventListener('click', () => {
+        // Fade out hero content first
+        heroContent.classList.add('fade-out');
+
+        setTimeout(() => {
+            // Trigger blinds opening animation
+            blinds.classList.add('open');
+            
+            // After blinds finish, hide hero and show main content
+            setTimeout(() => {
+                hero.style.display = 'none';
+                mainContent.style.display = '';
+                mainContent.classList.add('revealed');
+                sessionStorage.setItem('heroOpened', 'true');
+            }, 1000);
+        }, 400);
+    });
+})();
+</script>
 
 <!-- JS Scripts -->
 <script src="supabase.js"></script>
