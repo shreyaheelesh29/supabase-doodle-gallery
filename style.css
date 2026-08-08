@@ -1,0 +1,192 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Georgia, serif;
+    background:#f5f0e6;
+    color:#222;
+}
+
+.container{
+    width:90%;
+    max-width:1400px;
+    margin:auto;
+    padding:30px;
+}
+
+/* Heading */
+
+h1{
+    text-align:center;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:35px;
+}
+
+/* Drawing Section */
+
+.drawing-section{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+/* Title */
+
+#title{
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:25px;
+}
+
+/* Canvas */
+
+.canvas-container{
+    display:flex;
+    justify-content:center;
+}
+
+canvas{
+    background:white;
+    border:10px solid #ddd;
+    border-radius:10px;
+    cursor:crosshair;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+/* Drawing Tools */
+
+.tools{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+.tool-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* Buttons */
+
+button{
+    background:#43a047;
+    color:white;
+    border:none;
+    padding:12px 24px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+button:hover{
+    background:#2e7d32;
+}
+
+.save-btn{
+    display:block;
+    margin:30px auto 0;
+    font-size:20px;
+    padding:15px 35px;
+}
+
+/* Gallery */
+
+.gallery-section{
+    margin-top:60px;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+    gap:35px;
+    margin-top:30px;
+}
+
+/* Museum Card */
+
+.museum-card{
+    transition:.3s;
+}
+
+.museum-card:hover{
+    transform:translateY(-8px);
+}
+
+/* Wooden Frame */
+
+.frame{
+    background:#8b5a2b;
+    padding:18px;
+    border:8px solid #5c3814;
+    border-radius:6px;
+    box-shadow:
+        0 0 0 4px #b98a55,
+        0 12px 25px rgba(0,0,0,.35);
+}
+
+.frame img{
+    width:100%;
+    height:280px;
+    object-fit:contain;
+    background:white;
+    display:block;
+}
+
+/* Card Details */
+
+.card-info{
+    background:white;
+    padding:18px;
+}
+
+.card-info h3{
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.author{
+    color:#777;
+    font-size:15px;
+}
+.date{
+
+    color:#999;
+    font-size:14px;
+    margin-top:5px;
+
+}
+
+.author{
+
+    color:#666;
+    margin-top:10px;
+
+}
+
+.museum-card{
+
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+
+    box-shadow:0 15px 30px rgba(0,0,0,.15);
+
+}

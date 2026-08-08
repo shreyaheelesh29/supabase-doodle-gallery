@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Doodle Gallery</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Heading -->
+        <h1>🎨 Doodle Gallery</h1>
+
+        <p class="subtitle">
+            Draw something and add it to our public virtual doodle museum!
+        </p>
+
+
+        <!-- Drawing Section -->
+        <div class="drawing-section">
+
+            <!-- Doodle Title -->
+            <input
+                type="text"
+                id="title"
+                placeholder="Enter doodle title"
+            >
+
+
+            <!-- Drawing Canvas -->
+            <div class="canvas-container">
+
+                <canvas
+                    id="canvas"
+                    width="700"
+                    height="450">
+                </canvas>
+
+            </div>
+
+
+            <!-- Drawing Tools -->
+            <div class="tools">
+
+                <!-- Color Picker -->
+                <div class="tool-item">
+
+                    <label for="colorPicker">
+                        🎨 Color
+                    </label>
+
+                    <input
+                        type="color"
+                        id="colorPicker"
+                        value="#000000"
+                    >
+
+                </div>
+
+
+                <!-- Brush Size -->
+                <div class="tool-item">
+
+                    <label for="brushSize">
+                        🖌️ Brush Size
+                    </label>
+
+                    <input
+                        type="range"
+                        id="brushSize"
+                        min="1"
+                        max="30"
+                        value="4"
+                    >
+
+                </div>
+
+
+                <!-- Eraser -->
+                <button
+                    type="button"
+                    id="eraserBtn">
+                    🧽 Eraser
+                </button>
+
+
+                <!-- Clear Canvas -->
+                <button
+                    type="button"
+                    id="clearBtn">
+                    🗑️ Clear
+                </button>
+
+            </div>
+
+
+            <!-- Save Button -->
+            <button
+                type="button"
+                id="uploadBtn"
+                class="save-btn">
+                💾 Save Drawing
+            </button>
+
+        </div>
+
+
+        <!-- Gallery -->
+
+        <div class="gallery-section">
+
+            <h2>🖼️ Virtual Doodle Museum</h2>
+
+<p class="subtitle">
+Explore drawings submitted by visitors around the world.
+</p>
+
+            <p>
+                See drawings created by everyone!
+            </p>
+
+
+            <div
+                id="gallery"
+                class="gallery">
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Your JavaScript Files -->
+
+    <script src="supabase.js"></script>
+
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
