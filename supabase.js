@@ -1,13 +1,18 @@
 
 console.log("Supabase.js loaded");
+// ================================
+// Supabase Configuration
+// ================================
 
 const SUPABASE_URL = "https://mfiyabgvptisffmfqcot.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_u75AaMe9rYTc4G0tIjYZiw_LFgGqw7z";
+const SUPABASE_ANON_KEY ="sb_publishable_u75AaMe9rYTc4G0tIjYZiw_LFgGqw7z" ;
 
-window.db = window.supabase.createClient(
+// Create Supabase Client
+const db = window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_ANON_KEY
 );
 
-console.log(window.db);
+// Make it available globally
+window.db = db;
