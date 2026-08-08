@@ -96,3 +96,6 @@ eraserBtn.addEventListener("click", () => {
     }
 
 });
+canvas.addEventListener("pointerdown", () => {
+    alert("Pointer detected!");
+});
