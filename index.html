@@ -3,153 +3,140 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Doodle Gallery</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Supabase JavaScript Library -->
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Fabric.js -->
+    <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script>
 
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- Heading -->
-        <h1>🎨 Doodle Gallery</h1>
+    <h1>🎨 Doodle Gallery</h1>
 
-        <p class="subtitle">
-            Draw something and add it to our public virtual doodle museum!
-        </p>
+    <p class="subtitle">
+        Draw something and add it to our public virtual doodle museum!
+    </p>
 
+    <div class="drawing-section">
 
-        <!-- Drawing Section -->
-        <div class="drawing-section">
+        <!-- Title -->
+        <input
+            type="text"
+            id="title"
+            placeholder="Enter doodle title"
+        >
 
-            <!-- Doodle Title -->
-            <input
-                type="text"
-                id="title"
-                placeholder="Enter doodle title"
-            >
+        <!-- Canvas -->
+        <div class="canvas-container">
 
+            <canvas
+                id="canvas"
+                width="700"
+                height="450">
+            </canvas>
 
-            <!-- Drawing Canvas -->
-            <div class="canvas-container">
+        </div>
 
-                <canvas
-                    id="canvas"
-                    width="700"
-                    height="450">
-                </canvas>
+        <!-- Tools -->
 
-            </div>
+        <div class="tools">
 
+            <div class="tool-item">
 
-            <!-- Drawing Tools -->
-            <div class="tools">
+                <label for="colorPicker">
+                    🎨 Color
+                </label>
 
-                <!-- Color Picker -->
-                <div class="tool-item">
-
-                    <label for="colorPicker">
-                        🎨 Color
-                    </label>
-
-                    <input
-                        type="color"
-                        id="colorPicker"
-                        value="#000000"
-                    >
-
-                </div>
-
-
-                <!-- Brush Size -->
-                <div class="tool-item">
-
-                    <label for="brushSize">
-                        🖌️ Brush Size
-                    </label>
-
-                    <input
-                        type="range"
-                        id="brushSize"
-                        min="1"
-                        max="30"
-                        value="4"
-                    >
-
-                </div>
-
-
-                <!-- Eraser -->
-                <button
-                    type="button"
-                    id="eraserBtn">
-                    🧽 Eraser
-                </button>
-
-
-                <!-- Clear Canvas -->
-                <button
-                    type="button"
-                    id="clearBtn">
-                    🗑️ Clear
-                </button>
+                <input
+                    type="color"
+                    id="colorPicker"
+                    value="#000000">
 
             </div>
 
+            <div class="tool-item">
 
-            <!-- Save Button -->
+                <label for="brushSize">
+                    🖌️ Brush Size
+                </label>
+
+                <input
+                    type="range"
+                    id="brushSize"
+                    min="1"
+                    max="30"
+                    value="4">
+
+            </div>
+
             <button
-                type="button"
-                id="uploadBtn"
-                class="save-btn">
-                💾 Save Drawing
+                id="eraserBtn"
+                type="button">
+                🧽 Eraser
+            </button>
+
+            <button
+                id="clearBtn"
+                type="button">
+                🗑️ Clear
             </button>
 
         </div>
 
-
-        <!-- Gallery -->
-
-        <div class="gallery-section">
-
-            <h2>🖼️ Virtual Doodle Museum</h2>
-
-<p class="subtitle">
-Explore drawings submitted by visitors around the world.
-</p>
-
-            <p>
-                See drawings created by everyone!
-            </p>
-
-
-            <div
-                id="gallery"
-                class="gallery">
-            </div>
-
-        </div>
-
+        <button
+            id="uploadBtn"
+            class="save-btn"
+            type="button">
+            💾 Save Drawing
+        </button>
 
     </div>
 
+    <!-- Gallery -->
 
-    <!-- Your JavaScript Files -->
+    <div class="gallery-section">
 
-    <script src="supabase.js"></script>
+        <h2>🖼️ Virtual Doodle Museum</h2>
 
+        <p class="subtitle">
+            Explore drawings submitted by visitors around the world.
+        </p>
 
-    <script src="script.js"></script>
+        <p>
+            See drawings created by everyone!
+        </p>
 
+        <div
+            id="gallery"
+            class="gallery">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JavaScript -->
+
+<script src="supabase.js"></script>
+
+<!-- Fabric drawing -->
+<script src="canvas.js"></script>
+
+<!-- Supabase upload/gallery -->
+<script src="script.js"></script>
 
 </body>
 
