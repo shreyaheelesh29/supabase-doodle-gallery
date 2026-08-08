@@ -64,20 +64,21 @@ canvas{
     max-width:700px;
     height:auto;
 
-    background:white;
+    display:block;
+
+    background:#fff;
 
     border:10px solid #ddd;
     border-radius:10px;
 
-    display:block;
+    touch-action:none !important;
 
-    touch-action:none;
+    overscroll-behavior:none;
 
     user-select:none;
     -webkit-user-select:none;
 
     -webkit-touch-callout:none;
-
     -webkit-tap-highlight-color:transparent;
 }
 /* Drawing Tools */

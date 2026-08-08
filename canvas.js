@@ -3,6 +3,21 @@
 // =====================
 
 const canvas = document.getElementById("canvas");
+canvas.addEventListener(
+    "touchmove",
+    function(e){
+        e.preventDefault();
+    },
+    { passive:false }
+);
+
+canvas.addEventListener(
+    "touchstart",
+    function(e){
+        e.preventDefault();
+    },
+    { passive:false }
+);
 const ctx = canvas.getContext("2d");
 
 const colorPicker = document.getElementById("colorPicker");
