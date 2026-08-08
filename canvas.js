@@ -1,101 +1,152 @@
-// Canvas
+// =====================
+// Canvas Setup
+// =====================
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Controls
 const colorPicker = document.getElementById("colorPicker");
 const brushSize = document.getElementById("brushSize");
 const clearBtn = document.getElementById("clearBtn");
 const eraserBtn = document.getElementById("eraserBtn");
 
-// Drawing state
 let drawing = false;
 let erasing = false;
 
-// White canvas background
-ctx.fillStyle = "white";
+// White Background
+ctx.fillStyle = "#ffffff";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 ctx.lineJoin = "round";
 ctx.lineCap = "round";
 
-// Prevent page scrolling while drawing on phones
+// Prevent scrolling while drawing
 canvas.style.touchAction = "none";
 
-// Convert pointer position to canvas coordinates
-function getPosition(e) {
+// =====================
+// Get Canvas Position
+// =====================
+
+function getPos(e) {
+
     const rect = canvas.getBoundingClientRect();
 
+    let clientX;
+    let clientY;
+
+    if (e.touches && e.touches.length > 0) {
+
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+
+    } else {
+
+        clientX = e.clientX;
+        clientY = e.clientY;
+
+    }
+
     return {
-        x: (e.clientX - rect.left) * (canvas.width / rect.width),
-        y: (e.clientY - rect.top) * (canvas.height / rect.height)
+
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+
     };
+
 }
 
-// Start drawing
+// =====================
+// Drawing Functions
+// =====================
+
 function startDrawing(e) {
+
+    e.preventDefault();
 
     drawing = true;
 
-    const pos = getPosition(e);
+    const pos = getPos(e);
 
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
+
 }
 
-// Draw
 function draw(e) {
 
     if (!drawing) return;
 
-    const pos = getPosition(e);
+    e.preventDefault();
+
+    const pos = getPos(e);
 
     ctx.lineWidth = brushSize.value;
 
-    if (erasing) {
-        ctx.strokeStyle = "white";
-    } else {
-        ctx.strokeStyle = colorPicker.value;
-    }
+    ctx.strokeStyle = erasing ? "#ffffff" : colorPicker.value;
 
     ctx.lineTo(pos.x, pos.y);
+
     ctx.stroke();
+
 }
 
-// Stop drawing
-function stopDrawing() {
+function stopDrawing(e) {
+
+    if (e) e.preventDefault();
 
     drawing = false;
+
     ctx.beginPath();
+
 }
 
-// Pointer Events (works on Desktop + Mobile)
+// =====================
+// Desktop Mouse Events
+// =====================
+
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("mouseup", stopDrawing);
+canvas.addEventListener("mouseleave", stopDrawing);
+
+// =====================
+// Mobile Touch Events
+// =====================
+
+canvas.addEventListener("touchstart", startDrawing, { passive: false });
+canvas.addEventListener("touchmove", draw, { passive: false });
+canvas.addEventListener("touchend", stopDrawing, { passive: false });
+canvas.addEventListener("touchcancel", stopDrawing, { passive: false });
+
+// =====================
+// Pointer Events
+// =====================
+
 canvas.addEventListener("pointerdown", startDrawing);
 canvas.addEventListener("pointermove", draw);
 canvas.addEventListener("pointerup", stopDrawing);
-canvas.addEventListener("pointerleave", stopDrawing);
 canvas.addEventListener("pointercancel", stopDrawing);
 
-// Clear canvas
+// =====================
+// Clear Canvas
+// =====================
+
 clearBtn.addEventListener("click", () => {
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 });
 
-// Toggle eraser
+// =====================
+// Eraser
+// =====================
+
 eraserBtn.addEventListener("click", () => {
 
     erasing = !erasing;
 
-    if (erasing) {
-        eraserBtn.innerHTML = "🖊️ Pen";
-    } else {
-        eraserBtn.innerHTML = "🧽 Eraser";
-    }
+    eraserBtn.textContent = erasing ? "🖊️ Pen" : "🧽 Eraser";
 
-});
-canvas.addEventListener("pointerdown", () => {
-    alert("Pointer detected!");
 });
