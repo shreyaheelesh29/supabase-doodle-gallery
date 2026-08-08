@@ -1,144 +1,167 @@
-// ======================================
-// Elements
-// ======================================
+// =========================================
+// Virtual Doodle Museum - script.js
+// =========================================
 
 const uploadBtn = document.getElementById("uploadBtn");
 const gallery = document.getElementById("gallery");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
 
-// ======================================
-// Save Drawing
-// ======================================
+let galleryData = [];
 
-uploadBtn.addEventListener("click", uploadImage);
+uploadBtn.addEventListener("click", uploadDrawing);
 
-async function uploadImage() {
-
+async function uploadDrawing() {
     const title = document.getElementById("title").value.trim();
+    const artist = document.getElementById("artist").value.trim() || "Anonymous";
 
-    if (!title) {
-        alert("Please enter a title.");
+    if (title === "") {
+        alert("Please enter a title for your doodle.");
         return;
     }
 
-    // Export Fabric canvas to PNG
-    const imageData = canvas.toDataURL({
-        format: "png",
-        quality: 1
-    });
+    uploadBtn.disabled = true;
+    uploadBtn.innerText = "⏳ Saving...";
 
-    // Convert Base64 → Blob
-    const response = await fetch(imageData);
-    const blob = await response.blob();
+    try {
+        const dataURL = canvas.toDataURL({ format: "png", multiplier: 1 });
+        const blob = await (await fetch(dataURL)).blob();
+        const fileName = Date.now() + ".png";
 
-    const fileName = Date.now() + ".png";
+        // Upload image to Supabase Storage
+        const { error: uploadError } = await db.storage
+            .from("doodles")
+            .upload(fileName, blob, { contentType: "image/png" });
 
-    // Upload image to Supabase Storage
-    const { error: uploadError } = await db.storage
-        .from("doodles")
-        .upload(fileName, blob, {
-            contentType: "image/png"
-        });
+        if (uploadError) throw uploadError;
 
-    if (uploadError) {
-        console.error(uploadError);
-        alert(uploadError.message);
-        return;
-    }
+        // Get public URL
+        const { data: publicData } = db.storage
+            .from("doodles")
+            .getPublicUrl(fileName);
 
-    // Get Public URL
-    const { data } = db.storage
-        .from("doodles")
-        .getPublicUrl(fileName);
-
-    const imageUrl = data.publicUrl;
-
-    // Save URL in database
-    const { error: dbError } = await db
-        .from("doodles")
-        .insert([
-            {
+        // Insert row with title, artist name, and initial likes
+        const { error: insertError } = await db
+            .from("doodles")
+            .insert([{
                 title: title,
-                image_url: imageUrl
-            }
-        ]);
+                artist: artist,
+                image_url: publicData.publicUrl,
+                likes: 0
+            }]);
 
-    if (dbError) {
-        console.error(dbError);
-        alert(dbError.message);
-        return;
+        if (insertError) throw insertError;
+
+        alert("🎉 Doodle added to the museum!");
+        canvas.clear();
+        canvas.backgroundColor = "#ffffff";
+        canvas.renderAll();
+        document.getElementById("title").value = "";
+        document.getElementById("artist").value = "";
+
+        loadGallery();
+
+    } catch (err) {
+        console.error(err);
+        alert("Error saving: " + err.message);
+    } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.innerText = "💾 Save Drawing";
     }
-
-    alert("Drawing Saved!");
-
-    // Clear Fabric canvas
-    canvas.clear();
-
-    canvas.backgroundColor = "white";
-
-    canvas.renderAll();
-
-    document.getElementById("title").value = "";
-
-    loadGallery();
 }
 
-// ======================================
-// Load Gallery
-// ======================================
+// ===============================
+// Load & Render Gallery
+// ===============================
 
 async function loadGallery() {
-
-    gallery.innerHTML = "";
+    gallery.innerHTML = "<p>Loading museum exhibits...</p>";
 
     const { data, error } = await db
         .from("doodles")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*");
 
     if (error) {
         console.error(error);
+        gallery.innerHTML = "<p>Failed to load gallery.</p>";
         return;
     }
 
-    data.forEach(item => {
-
-        const date = new Date(item.created_at)
-            .toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-            });
-
-        gallery.innerHTML += `
-
-        <div class="museum-card">
-
-            <div class="frame">
-
-                <img src="${item.image_url}" alt="${item.title}">
-
-            </div>
-
-            <div class="card-info">
-
-                <h3>${item.title}</h3>
-
-                <p class="author">
-                    👤 Anonymous
-                </p>
-
-                <p class="date">
-                    📅 ${date}
-                </p>
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
+    galleryData = data || [];
+    renderGallery();
 }
 
+function renderGallery() {
+    gallery.innerHTML = "";
+
+    const searchTerm = searchInput.value.toLowerCase();
+    const sortBy = sortSelect.value;
+
+    // Filter
+    let filtered = galleryData.filter(item => {
+        const titleMatch = item.title && item.title.toLowerCase().includes(searchTerm);
+        const artistMatch = item.artist && item.artist.toLowerCase().includes(searchTerm);
+        return titleMatch || artistMatch;
+    });
+
+    // Sort
+    filtered.sort((a, b) => {
+        if (sortBy === "likes") {
+            return (b.likes || 0) - (a.likes || 0);
+        } else {
+            return new Date(b.created_at) - new Date(a.created_at);
+        }
+    });
+
+    if (filtered.length === 0) {
+        gallery.innerHTML = "<p>No doodles found matching your search.</p>";
+        return;
+    }
+
+    filtered.forEach(item => {
+        const date = new Date(item.created_at).toLocaleDateString("en-US", {
+            month: "short", day: "numeric", year: "numeric"
+        });
+
+        const card = document.createElement("div");
+        card.className = "museum-card";
+        card.innerHTML = `
+            <div class="frame">
+                <img src="${item.image_url}" alt="${item.title}">
+            </div>
+            <div class="card-info">
+                <h3>${item.title}</h3>
+                <p class="author">👤 Painted by: <strong>${item.artist || 'Anonymous'}</strong></p>
+                <div class="card-footer">
+                    <span class="date">📅 ${date}</span>
+                    <button class="like-btn" onclick="likeDoodle('${item.id}', this)">
+                        ❤️ <span class="like-count">${item.likes || 0}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+        gallery.appendChild(card);
+    });
+}
+
+// Like functionality
+window.likeDoodle = async function(id, btn) {
+    const countSpan = btn.querySelector(".like-count");
+    let currentLikes = parseInt(countSpan.innerText, 10);
+    currentLikes += 1;
+    countSpan.innerText = currentLikes;
+
+    // Update state locally
+    const item = galleryData.find(d => d.id == id);
+    if (item) item.likes = currentLikes;
+
+    // Update in Supabase
+    await db.from("doodles").update({ likes: currentLikes }).eq("id", id);
+};
+
+// Event listeners for search & sort
+searchInput.addEventListener("input", renderGallery);
+sortSelect.addEventListener("change", renderGallery);
+
+// Initial Load
 loadGallery();

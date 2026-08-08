@@ -1,253 +1,235 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+/* =========================
+   RESET & BASE
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#f2ede2;
-    color:#222;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #efe6d3;
+    color: #333;
 }
 
-.container{
-    width:90%;
-    max-width:1200px;
-    margin:auto;
-    padding:30px 20px;
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px 20px;
 }
 
-h1{
-    text-align:center;
-    margin-bottom:10px;
-    font-size:42px;
+header {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-.subtitle{
-    text-align:center;
-    color:#666;
-    margin-bottom:30px;
+header h1 {
+    font-size: 48px;
+    color: #5a3414;
 }
 
-.drawing-section{
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
+header p {
+    margin-top: 5px;
+    color: #666;
+    font-size: 18px;
 }
 
-#title{
+/* =========================
+   DRAWING PANEL & INPUTS
+========================= */
 
-    width:100%;
-    padding:14px;
-    margin-bottom:20px;
-
-    border:1px solid #ccc;
-
-    border-radius:8px;
-
-    font-size:16px;
-
+.drawing-panel {
+    background: #fffefb;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+    margin-bottom: 60px;
+    text-align: center;
 }
 
-/* Canvas */
-
-.canvas-container{
-
-    display:flex;
-    justify-content:center;
-    margin-bottom:25px;
-
+.input-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-canvas{
-
-    border:8px solid #ddd;
-
-    border-radius:10px;
-
-    background:white;
-
-    width:100%;
-    max-width:700px;
-    height:auto;
-
-    touch-action:none;
-
-    display:block;
-
+.input-group input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
 }
 
-/* Tools */
+/* =========================
+   CANVAS FRAME FIX
+========================= */
 
-.tools{
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
-    flex-wrap:wrap;
-
+.canvas-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 25px auto;
+    padding: 12px;
+    background: #7a4d22;
+    border: 10px solid #5c3814;
+    border-radius: 12px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4), 0 15px 30px rgba(0, 0, 0, 0.25);
 }
 
-.tool-item{
-
-    display:flex;
-    align-items:center;
-    gap:10px;
-
+.canvas-container {
+    margin: 0 auto;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ffffff;
 }
 
-input[type="range"]{
-
-    width:120px;
-
+canvas {
+    display: block;
+    touch-action: none;
 }
 
-button{
+/* =========================
+   TOOLBAR & SWATCHES
+========================= */
 
-    padding:12px 18px;
-
-    border:none;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    background:#2e7d32;
-
-    color:white;
-
-    font-size:15px;
-
+.toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
-button:hover{
-
-    background:#1b5e20;
-
+.tool-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.save-btn{
-
-    display:block;
-
-    margin:30px auto 0;
-
-    font-size:18px;
-
+.color-palette {
+    display: flex;
+    gap: 8px;
 }
 
-/* Gallery */
-
-.gallery-section{
-
-    margin-top:60px;
-
+.swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
 }
 
-.gallery{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-
-    gap:30px;
-
+.swatch:hover {
+    transform: scale(1.15);
 }
 
-/* Museum Card */
-
-.museum-card{
-
-    background:white;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    transition:.3s;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-
+button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #6b3d17;
+    color: white;
+    font-size: 14px;
+    transition: .2s;
 }
 
-.museum-card:hover{
-
-    transform:translateY(-8px);
-
+button:hover {
+    background: #8b5a2b;
 }
 
-.frame{
-
-    background:#8b5a2b;
-
-    padding:18px;
-
-    border:8px solid #5c3814;
-
+.active-tool {
+    background: #a84300 !important;
+    font-weight: bold;
 }
 
-.frame img{
+/* =========================
+   GALLERY & SEARCH
+========================= */
 
-    width:100%;
-
-    height:250px;
-
-    object-fit:contain;
-
-    background:white;
-
+.gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
-.card-info{
-
-    padding:18px;
-
+.gallery-controls {
+    display: flex;
+    gap: 10px;
 }
 
-.card-info h3{
-
-    margin-bottom:10px;
-
+.gallery-controls input, .gallery-controls select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
-.author{
-
-    color:#666;
-
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
 }
 
-.date{
-
-    color:#999;
-
-    margin-top:5px;
-
-    font-size:14px;
-
+.museum-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
 }
 
-/* Mobile */
+.frame {
+    padding: 18px;
+    background: #8b5a2b;
+    border: 10px solid #5c3814;
+}
 
-@media(max-width:768px){
+.frame img {
+    width: 100%;
+    display: block;
+    background: white;
+}
 
-    h1{
+.card-info {
+    padding: 15px;
+}
 
-        font-size:32px;
+.card-info h3 {
+    color: #4d2e12;
+    margin-bottom: 5px;
+}
 
-    }
+.author {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
 
-    .tools{
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        flex-direction:column;
+.like-btn {
+    background: #ffe6e6;
+    color: #d63031;
+    border: 1px solid #ff7675;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
 
-    }
-
-    canvas{
-
-        width:100%;
-
-    }
-
+.like-btn:hover {
+    background: #ff7675;
+    color: white;
 }
